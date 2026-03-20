@@ -71,7 +71,7 @@ function AboutPage() {
             About this<br /><span style={{ color: "#6ee7b7" }}>ESG Intelligence Platform</span>
           </h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 16, margin: 0, maxWidth: 520 }}>
-            Built entirely by our research group — with AI — to answer one of modern finance's hardest questions.
+            Built entirely by our research group with AI to answer one of modern finance's hardest questions.
           </p>
         </div>
       </div>
@@ -82,7 +82,7 @@ function AboutPage() {
         <div style={{ background: "#fff", borderRadius: 20, padding: 32, marginBottom: 24, boxShadow: "0 2px 12px rgba(0,0,0,0.04)", borderLeft: "4px solid #064e3b" }}>
           <p style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 700, color: "#064e3b", textTransform: "uppercase", letterSpacing: 2 }}>Core Research Question</p>
           <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827", lineHeight: 1.7, fontStyle: "italic" }}>
-            "As an active investor, can I trust ESG metrics to inform my stock-picking and disclosure — and if not, what should I use instead?"
+            "As an active investor, can I trust ESG metrics to inform my stock-picking and disclosure  and if not, what should I use instead?"
           </p>
         </div>
 
@@ -92,13 +92,13 @@ function AboutPage() {
             {
               num: "01", title: "Diagnostic Layer",
               question: "Do ESG metrics actually measure what they claim?",
-              answer: "Per Berg et al., the answer is poorly and inconsistently. Ratings from MSCI, Sustainalytics and others diverge significantly for the same company — correlation as low as 0.38.",
+              answer: "Per Berg et al., the answer is poorly and inconsistently. Ratings from MSCI, Sustainalytics and others diverge significantly for the same company : correlation as low as 0.38.",
               color: "#ef4444", bg: "#fef2f2", border: "#fca5a5", icon: "🔬"
             },
             {
               num: "02", title: "Problem Layer",
               question: "Are the distortions random or systematic?",
-              answer: "If random, they're just noise. But if systematic — meaning firms can deliberately game them — relying on ESG ratings exposes investors to greenwashing risk and capital misallocation.",
+              answer: "If random, they're just noise. But if systematic, meaning firms can deliberately game them, relying on ESG ratings exposes investors to greenwashing risk and capital misallocation.",
               color: "#f97316", bg: "#fff7ed", border: "#fdba74", icon: "⚠️"
             },
             {
@@ -126,7 +126,7 @@ function AboutPage() {
         <div style={{ background: "#fff", borderRadius: 20, padding: 28, marginBottom: 24, boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
           <h3 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: "#111827" }}>Why we built these tools</h3>
           <p style={{ margin: "0 0 20px", fontSize: 13, color: "#374151", lineHeight: 1.8 }}>
-            Standard ESG ratings give a single score that obscures more than it reveals. To actually answer our research question, we needed <strong>proxies</strong> — measurable, transparent signals that go deeper than a Bloomberg ESG score. These two tools are exactly that: purpose-built instruments designed to produce the numerical evidence our report required, fully coded by the group using AI-assisted development.
+            Standard ESG ratings give a single score that obscures more than it reveals. To actually answer our research question, we needed <strong>proxies</strong> measurable, transparent signals that go deeper than a Bloomberg ESG score. These two tools are exactly that: purpose-built instruments designed to produce the numerical evidence our report required, fully coded by the group using AI-assisted development.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {[
@@ -134,13 +134,13 @@ function AboutPage() {
                 icon: "🌿", color: "#064e3b", bg: "#ecfdf5", border: "#a7f3d0",
                 title: "Greenwashing Detector",
                 subtitle: "Linguistic proxy for greenwashing intent",
-                desc: "By counting how often a company uses vague, unverifiable, or temporally evasive language in its ESG disclosures, we flag documents where rhetoric outpaces substance. This gives us a quantitative greenwashing risk score — a proxy that no standard ESG rating provides.",
+                desc: "By counting how often a company uses vague, unverifiable, or temporally evasive language in its ESG disclosures, we flag documents where rhetoric outpaces substance. This gives us a quantitative greenwashing risk score a proxy that no standard ESG rating provides.",
                 points: ["40+ greenwashing keywords across 7 categories", "0–100 risk score per document", "Detects vague promises, dubious claims, doublespeak"]
               },
               {
                 icon: "📊", color: "#1e40af", bg: "#eff6ff", border: "#bfdbfe",
                 title: "NLP Simulator",
-                subtitle: "Disclosure depth proxy — Ping An 19 Indicators",
+                subtitle: "Disclosure depth proxy : Ping An 19 Indicators",
                 desc: "Rather than trusting a rating agency's black box, we directly measure keyword coverage across 19 TCFD-aligned indicators to produce our own transparency score. Inspired by Ping An's ESG framework, this tool reveals what's actually in the report vs what sounds good on the cover.",
                 points: ["19 indicators across 3 analytical layers (A, B, C)", "Scores 0–1 per indicator per company", "Spotlight on 3 key greenwashing signals: Scope 3, Capital & Financing, Climate Risk Mgmt"]
               }
@@ -195,12 +195,12 @@ function AboutPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 28 }}>👥</span>
             <div>
-              <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#fff" }}>Built by the group — powered by AI</p>
-              <p style={{ margin: 0, fontSize: 13, color: "rgba(255,255,255,0.6)" }}>Imperial College — Finance Research Report</p>
+              <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#fff" }}>Built by the group, powered by AI</p>
+              <p style={{ margin: 0, fontSize: 13, color: "rgba(255,255,255,0.6)" }}>Imperial College — Gourp 2M</p>
             </div>
           </div>
           <p style={{ margin: "0 0 16px", fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.8 }}>
-            This platform was designed, coded and iterated entirely by our research group using AI-assisted development. No third-party ESG data vendors, no black-box APIs — every line of analysis is transparent, reproducible and grounded in our report's methodology.
+            This platform was designed, coded and iterated entirely by our research group using AI-assisted development. No third-party ESG data vendors, no black-box APIs every line of analysis is transparent, reproducible.
           </p>
           <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: 14 }}>
             <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>

@@ -11,24 +11,24 @@ const INDICATORS = {
   A4_General_Emissions: { label: "General Emissions", category: "A", num: 4, desc: "Assesses overall GHG emissions disclosure including carbon footprint and net zero framing.", keywords: ["greenhouse gas","ghg emissions","carbon emissions","co2","carbon footprint","emissions reduction","net zero","carbon neutral","emissions intensity","absolute emissions"] },
   A5_Scope1: { label: "Scope 1", category: "A", num: 5, desc: "Direct emissions from owned or controlled sources (combustion, fugitive emissions).", keywords: ["scope 1","direct emissions","direct ghg","combustion emissions","fugitive emissions","scope 1 emissions","operated emissions"] },
   A6_Scope2: { label: "Scope 2", category: "A", num: 6, desc: "Indirect emissions from purchased electricity and energy. Market-based vs location-based reporting.", keywords: ["scope 2","indirect emissions","purchased electricity","market-based","location-based","scope 2 emissions","energy indirect"] },
-  A7_Scope3: { label: "Scope 3", category: "A", num: 7, desc: "⚠️ KEY INDICATOR — Value chain emissions (upstream + downstream). Often omitted by brown firms to hide true climate impact.", keywords: ["scope 3","value chain emissions","upstream emissions","downstream emissions","supply chain emissions","scope 3 emissions","product use emissions","financed emissions"] },
+  A7_Scope3: { label: "Scope 3", category: "A", num: 7, desc: "⚠️ KEY INDICATOR: Value chain emissions (upstream + downstream). Often omitted by brown firms to hide true climate impact.", keywords: ["scope 3","value chain emissions","upstream emissions","downstream emissions","supply chain emissions","scope 3 emissions","product use emissions","financed emissions"] },
   A8_Targets: { label: "Target Setting", category: "A", num: 8, desc: "Science-based targets, Paris alignment, 1.5°C commitments and interim milestones.", keywords: ["emission target","net zero target","carbon target","reduction target","climate target","paris agreement","1.5 degree","science-based target","sbti","2030 target","2050 target"] },
   A9_Physical_Risk: { label: "Physical Risk", category: "A", num: 9, desc: "Exposure of assets to physical climate hazards: floods, heat stress, sea level rise.", keywords: ["physical risk","asset location","vulnerable assets","flood risk","climate hazard","extreme weather","sea level","heat stress","geographic exposure","asset exposure"] },
-  B10_Revenues: { label: "Revenues", category: "B", num: 10, desc: "How climate change affects revenue streams — green product demand, carbon pricing, market shifts.", keywords: ["revenue impact","revenue risk","green revenue","climate revenue","sales impact","demand impact","market shift","low-carbon products","sustainable products","revenue stream"] },
-  B11_Expenditures: { label: "Expenditures", category: "B", num: 11, desc: "Climate-related CAPEX and OPEX — green investments, R&D, transition spending.", keywords: ["capital expenditure","capex","opex","operating expenditure","climate expenditure","green investment","low-carbon investment","clean technology","transition expenditure"] },
+  B10_Revenues: { label: "Revenues", category: "B", num: 10, desc: "How climate change affects revenue streams, green product demand, carbon pricing, market shifts.", keywords: ["revenue impact","revenue risk","green revenue","climate revenue","sales impact","demand impact","market shift","low-carbon products","sustainable products","revenue stream"] },
+  B11_Expenditures: { label: "Expenditures", category: "B", num: 11, desc: "Climate-related CAPEX and OPEX, green investments, R&D, transition spending.", keywords: ["capital expenditure","capex","opex","operating expenditure","climate expenditure","green investment","low-carbon investment","clean technology","transition expenditure"] },
   B12_Assets: { label: "Assets & Liabilities", category: "B", num: 12, desc: "Stranded asset risk, impairments, write-downs and climate-related balance sheet exposure.", keywords: ["stranded asset","asset impairment","asset write-down","asset valuation","balance sheet","climate liability","decommissioning","asset retirement","asset risk","liabilities"] },
-  B13_Capital: { label: "Capital & Financing", category: "B", num: 13, desc: "⚠️ KEY INDICATOR — Green bonds, sustainability-linked financing, cost of capital impacts. Low scores suggest disconnect between climate narrative and financial planning.", keywords: ["green bond","sustainability-linked","climate financing","capital allocation","transition finance","cost of capital","financing risk","credit rating","debt financing","capital structure"] },
+  B13_Capital: { label: "Capital & Financing", category: "B", num: 13, desc: "⚠️ KEY INDICATOR: Green bonds, sustainability-linked financing, cost of capital impacts. Low scores suggest disconnect between climate narrative and financial planning.", keywords: ["green bond","sustainability-linked","climate financing","capital allocation","transition finance","cost of capital","financing risk","credit rating","debt financing","capital structure"] },
   C14_Energy_Theme: { label: "Energy Theme", category: "C", num: 14, desc: "Thematic depth on energy transition, electrification, decarbonisation strategy.", keywords: ["energy transition","clean energy","low-carbon energy","renewable","energy security","decarbonisation","electrification"] },
   C15_Governance: { label: "Governance", category: "C", num: 15, desc: "Board oversight of climate, executive remuneration linked to ESG, climate committees.", keywords: ["board oversight","climate governance","executive remuneration","governance framework","board responsibility","climate committee","incentive structure","management responsibility"] },
   C16_Human_Rights: { label: "Human Rights & Safety", category: "C", num: 16, desc: "Labour rights, worker welfare, just transition, community impact and supply chain social standards.", keywords: ["human rights","employee safety","health and safety","labour rights","community impact","social impact","worker welfare","just transition","fair labour","supply chain labour"] },
-  C17_Risk_Mgmt: { label: "Climate Risk Mgmt", category: "C", num: 17, desc: "⚠️ KEY INDICATOR — TCFD framework, scenario analysis, stress testing. Low scores indicate shallow climate risk integration.", keywords: ["risk management","climate risk framework","risk identification","risk assessment","risk mitigation","scenario analysis","stress testing","tcfd","task force","climate risk process"] },
+  C17_Risk_Mgmt: { label: "Climate Risk Mgmt", category: "C", num: 17, desc: "⚠️ KEY INDICATOR: TCFD framework, scenario analysis, stress testing. Low scores indicate shallow climate risk integration.", keywords: ["risk management","climate risk framework","risk identification","risk assessment","risk mitigation","scenario analysis","stress testing","tcfd","task force","climate risk process"] },
   C18_Emissions_Theme: { label: "Emissions Theme", category: "C", num: 18, desc: "Quality of emissions reporting methodology — GHG protocol, emission factors, monitoring systems.", keywords: ["emission reporting","carbon accounting","ghg protocol","emission factor","emissions data","carbon disclosure","monitoring"] },
   C19_GRI: { label: "GRI & Materiality", category: "C", num: 19, desc: "Alignment with global standards: GRI, SASB, ISSB, CSRD, double materiality assessment.", keywords: ["gri","global reporting initiative","materiality assessment","material topic","stakeholder engagement","double materiality","reporting framework","disclosure standard","sasb","issb","csrd"] },
 };
 
 const CAT_COLORS = { A: "#059669", B: "#3b82f6", C: "#8b5cf6" };
 const CAT_BG = { A: "#ecfdf5", B: "#eff6ff", C: "#f5f3ff" };
-const CAT_LABELS = { A: "Category A — Climate Metrics", B: "Category B — Financial Impact", C: "Category C — Thematic Depth" };
+const CAT_LABELS = { A: "Category A: Climate Metrics", B: "Category B: Financial Impact", C: "Category C: Thematic Depth" };
 const CAT_DESC = {
   A: "9 indicators measuring quantitative climate data: energy, water, land, emissions (Scope 1/2/3), targets and physical risk exposure.",
   B: "4 indicators measuring how climate change translates into financial impacts on revenues, costs, assets and financing.",
@@ -138,7 +138,7 @@ export default function NLPSimulator() {
             Ping An 19-Indicator<br /><span style={{ color: "#93c5fd" }}>ESG Analyser</span>
           </h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 16, margin: "0 0 32px", maxWidth: 520 }}>
-            Upload ESG reports and compare companies across Ping An's 19 disclosure indicators. Scores reveal what's really in the report — not just what looks good on the cover.
+            Upload ESG reports and compare companies across Ping An's 19 disclosure indicators. Scores reveal what's really in the report, not just what looks good on the cover.
           </p>
           <div style={{ display: "flex", gap: 32 }}>
             {[{ n: 19, l: "Indicators" }, { n: 3, l: "Categories" }, { n: companies.length, l: "Reports loaded" }].map(({ n, l }) => (
@@ -328,7 +328,7 @@ export default function NLPSimulator() {
             {/* RADAR */}
             {activeChart === "radar" && (
               <div style={{ background: "#fff", borderRadius: 20, padding: 24, boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
-                <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 700, color: "#111827" }}>Category Comparison — Radar Chart</h3>
+                <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 700, color: "#111827" }}>Category Comparison, Radar Chart</h3>
                 <p style={{ margin: "0 0 8px", fontSize: 13, color: "#6b7280" }}>Each axis shows the <strong>average score</strong> across all indicators in that category (0 = no disclosure, 1 = full disclosure). A balanced, large polygon = comprehensive ESG reporting.</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 20 }}>
                   {Object.entries(CAT_LABELS).map(([cat, label]) => (
@@ -350,7 +350,7 @@ export default function NLPSimulator() {
                   </RadarChart>
                 </ResponsiveContainer>
                 <p style={{ margin: "16px 0 0", fontSize: 12, color: "#9ca3af", fontStyle: "italic" }}>
-                  💡 A company scoring high on Category A but low on B and C is likely disclosing climate metrics without connecting them to financial planning — a classic greenwashing pattern.
+                  💡 A company scoring high on Category A but low on B and C is likely disclosing climate metrics without connecting them to financial planning, a classic greenwashing pattern.
                 </p>
               </div>
             )}

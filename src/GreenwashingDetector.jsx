@@ -1,26 +1,169 @@
 import { useState, useCallback } from "react";
+import './App.css'
 import * as pdfjsLib from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const DEFAULT_GREENWASHING_KEYWORDS = {
-  "Vague terms": ["eco-friendly","green","sustainable","natural","organic","environmentally friendly","eco","green initiative"],
-  "Unverified certifications": ["certified","certified green","certified sustainable","eco-certified"],
-  "Vague promises": ["commitment to sustainability","committed to","dedicated to","striving for","working towards","efforts to"],
-  "Dubious claims": ["net zero","carbon neutral","emission reduction","renewable energy","clean energy"],
-  "Temporal vagueness": ["soon","eventually","in the future","long term","target by"],
-  "Aggressive marketing": ["world-leading","industry first","revolutionary","innovative","cutting-edge"],
-  "Doublespeak": ["while maintaining","balancing growth","economic growth","competitive"]
+
+  "Temporal evasion": [
+    "awaiting validation",
+    "in the coming years",
+    "over time",
+    "phased approach",
+    "trajectory towards",
+    "eventually",
+    "in the future",
+    "soon",
+    "we will work to",
+    "when technology allows",
+    "as technology matures",
+    "subject to market conditions",
+    "long-term ambition",
+    "medium-term"
+  ],
+
+  "Commitment softeners": [
+    "we aim to",
+    "we aspire",
+    "we hope to",
+    "we are exploring",
+    "we are piloting",
+    "we are testing",
+    "we are trialling",
+    "we are developing",
+    "to the extent possible",
+    "where feasible",
+    "where practicable",
+    "ambition to",
+    "we intend to",
+    "we expect to",
+    "where possible"
+  ],
+
+  "Unverifiable vague claims": [
+    "eco-friendly",
+    "environmentally friendly",
+    "green initiative",
+    "clean energy",
+    "cleaner energy",
+    "responsibly produced",
+    "sustainable products",
+    "low-carbon portfolio",
+    "integrated approach",
+    "multi-energy",
+    "world-class",
+    "best-in-class",
+    "robust sustainability",
+    "responsible fossil",
+    "low-emission gas"
+  ],
+
+  "Fossil fuel justification": [
+    "transition fuel",
+    "bridge fuel",
+    "natural gas solution",
+    "blue hydrogen",
+    "lower-carbon intensity",
+    "cleaner burning",
+    "energy security transition",
+    "low-emission gas"
+  ],
+
+  "Metric manipulation": [
+    "per litre",
+    "per barrel",
+    "per unit produced",
+    "market-based approach",
+    "at an aggregate level",
+    "restated baseline",
+    "pro forma",
+    "methane intensity",
+    "flaring intensity",
+    "intensity-based target",
+    "on a like-for-like basis",
+    "excluding acquisitions"
+  ],
+
+  "Offset & compensation": [
+    "carbon credits",
+    "carbon offsets",
+    "residual emissions",
+    "unavoidable emissions",
+    "nature-based solutions",
+    "carbon removal",
+    "sequestration",
+    "reforestation",
+    "avoided emissions",
+    "neutralise",
+    "blue carbon",
+    "biodiversity credits",
+    "carbon insets",
+    "carbon capture"
+  ],
+
+  "Responsibility shifting": [
+    "customer choice",
+    "consumer behaviour",
+    "end-user responsibility",
+    "use phase emissions",
+    "customer emissions",
+    "encouraged to",
+    "we ask suppliers to",
+    "voluntary basis",
+    "value chain responsibility"
+  ],
+
+  "Marketing superlatives": [
+    "world-leading",
+    "industry-first",
+    "pioneering",
+    "trailblazing",
+    "groundbreaking",
+    "game-changing",
+    "transformational",
+    "unprecedented progress",
+    "landmark commitment",
+    "most ambitious",
+    "innovative",
+    "cutting-edge",
+    "revolutionary"
+  ],
+
+  "False precision": [
+    "approximately",
+    "up to",
+    "based on assumptions",
+    "subject to",
+    "depending on external factors",
+    "modelled scenarios",
+    "estimated data",
+    "without mitigation",
+    "gross basis"
+  ],
+
+  "Selective framing": [
+    "excluding acquisitions",
+    "on a like-for-like basis",
+    "legacy assets",
+    "stranded assets",
+    "without mitigation",
+    "gross basis",
+    "pro forma basis"
+  ]
 };
 
 const CATEGORY_COLORS = {
-  "Vague terms": { bg: "#f0fdf4", border: "#86efac", text: "#15803d", dot: "#22c55e" },
-  "Unverified certifications": { bg: "#fefce8", border: "#fde047", text: "#a16207", dot: "#eab308" },
-  "Vague promises": { bg: "#eff6ff", border: "#93c5fd", text: "#1d4ed8", dot: "#3b82f6" },
-  "Dubious claims": { bg: "#fdf4ff", border: "#d8b4fe", text: "#7e22ce", dot: "#a855f7" },
-  "Temporal vagueness": { bg: "#fff7ed", border: "#fdba74", text: "#c2410c", dot: "#f97316" },
-  "Aggressive marketing": { bg: "#fff1f2", border: "#fda4af", text: "#be123c", dot: "#f43f5e" },
-  "Doublespeak": { bg: "#f0fdfa", border: "#5eead4", text: "#0f766e", dot: "#14b8a6" }
+  "Temporal evasion":         { bg: "#fff7ed", border: "#fdba74", text: "#c2410c", dot: "#f97316" },
+  "Commitment softeners":     { bg: "#eff6ff", border: "#93c5fd", text: "#1d4ed8", dot: "#3b82f6" },
+  "Unverifiable vague claims":{ bg: "#f0fdf4", border: "#86efac", text: "#15803d", dot: "#22c55e" },
+  "Fossil fuel justification":{ bg: "#fef3c7", border: "#fcd34d", text: "#92400e", dot: "#f59e0b" },
+  "Metric manipulation":      { bg: "#fdf4ff", border: "#d8b4fe", text: "#7e22ce", dot: "#a855f7" },
+  "Offset & compensation":    { bg: "#f0fdfa", border: "#5eead4", text: "#0f766e", dot: "#14b8a6" },
+  "Responsibility shifting":  { bg: "#fef2f2", border: "#fca5a5", text: "#b91c1c", dot: "#ef4444" },
+  "Marketing superlatives":   { bg: "#fff1f2", border: "#fda4af", text: "#be123c", dot: "#f43f5e" },
+  "False precision":          { bg: "#f8fafc", border: "#cbd5e1", text: "#475569", dot: "#94a3b8" },
+  "Selective framing":        { bg: "#fefce8", border: "#fde047", text: "#a16207", dot: "#eab308" },
 };
 
 function countKeywords(text, keywords) {
@@ -29,23 +172,54 @@ function countKeywords(text, keywords) {
   let total = 0;
   for (const [category, keywordList] of Object.entries(keywords)) {
     for (const keyword of keywordList) {
-      const pattern = new RegExp(`\\b${keyword.replace(/[-]/g, "\\$&")}\\b`, "gi");
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const pattern = new RegExp(`(?<![a-z])${escaped}(?![a-z])`, "gi");
       const matches = (normalized.match(pattern) || []).length;
       if (matches > 0) {
-        results[keyword] = { count: matches, category };
-        total += matches;
+        if (!results[keyword]) {
+          results[keyword] = { count: matches, category };
+          total += matches;
+        }
       }
     }
   }
   return { results, total };
 }
 
-function getRiskLevel(score) {
-  if (score < 20) return { label: "Low Risk", color: "#22c55e", bg: "#f0fdf4", border: "#86efac", desc: "This document shows minimal greenwashing indicators." };
-  if (score < 50) return { label: "Moderate Risk", color: "#eab308", bg: "#fefce8", border: "#fde047", desc: "Some vague terms detected. Review carefully." };
-  if (score < 75) return { label: "High Risk", color: "#f97316", bg: "#fff7ed", border: "#fdba74", desc: "Several greenwashing patterns found in this document." };
-  return { label: "Very High Risk", color: "#ef4444", bg: "#fef2f2", border: "#fca5a5", desc: "Strong greenwashing indicators throughout the document." };
+function calculateRiskScore(total, uniqueKeywords, text) {
+  // 1. Taille du document en mots
+  const wordCount = text.trim().split(/\s+/).length;
+
+  // 2. Densité = occurrences pour 1000 mots (normalisé)
+  const density = (total / wordCount) * 1000;
+
+  // 3. Diversité = % de catégories uniques touchées sur 10 catégories max
+  const totalCategories = 10;
+  const diversityRatio = Math.min(uniqueKeywords / totalCategories, 1);
+
+  // 4. Score brut = densité * 20 + diversité * 30
+  // densité typique d'un rapport ESG : 3-8 occurrences/1000 mots
+  // à 5/1000 mots → 5 * 20 = 100 → plafonné
+  // on divise par 2 pour avoir une échelle plus réaliste
+  const densityScore = Math.min(70, density * 10);
+  const diversityScore = diversityRatio * 30;
+
+  // 5. Score final plafonné à 100
+  return Math.min(100, Math.round(densityScore + diversityScore));
 }
+
+function getRiskLevel(score) {
+  if (score < 20) return { label: "Low Risk",       color: "#22c55e", bg: "#f0fdf4", border: "#86efac", desc: "This document shows minimal greenwashing indicators." };
+  if (score < 50) return { label: "Moderate Risk",  color: "#eab308", bg: "#fefce8", border: "#fde047", desc: "Some vague terms detected. Review carefully." };
+  if (score < 75) return { label: "High Risk",      color: "#f97316", bg: "#fff7ed", border: "#fdba74", desc: "Several greenwashing patterns found in this document." };
+  return             { label: "Very High Risk",  color: "#ef4444", bg: "#fef2f2", border: "#fca5a5", desc: "Strong greenwashing indicators throughout the document." };
+}
+
+const NAV_ITEMS = [
+  { id: "input",    label: "Analyze",  icon: "📄" },
+  { id: "keywords", label: "Keywords", icon: "🔑" },
+  { id: "report",   label: "Report",   icon: "📊" }
+];
 
 export default function GreenwashingDetector() {
   const [text, setText] = useState("");
@@ -93,21 +267,27 @@ export default function GreenwashingDetector() {
     if (file && file.type === "application/pdf") extractPDF(file);
   }, []);
 
-  const analyze = useCallback(() => {
-    if (!text.trim()) return;
-    const { results, total } = countKeywords(text, keywords);
-    const uniqueKeywords = Object.keys(results).length;
-    const riskScore = Math.min(100, total * 5 + uniqueKeywords * 3);
-    const risk = getRiskLevel(riskScore);
-    const sorted = Object.entries(results).sort((a, b) => b[1].count - a[1].count);
-    const byCategory = {};
-    for (const [kw, { count, category }] of sorted) {
-      if (!byCategory[category]) byCategory[category] = [];
-      byCategory[category].push({ keyword: kw, count });
-    }
-    setReport({ sorted, byCategory, total, uniqueKeywords, riskScore, risk, documentName });
-    setActiveTab("report");
-  }, [text, documentName, keywords]);
+const analyze = useCallback(() => {
+  if (!text.trim()) return;
+  const { results, total } = countKeywords(text, keywords);
+  const uniqueKeywords = Object.keys(results).length;
+
+  // NOUVEAU CALCUL
+  const riskScore = calculateRiskScore(total, uniqueKeywords, text);
+
+  const risk = getRiskLevel(riskScore);
+  const sorted = Object.entries(results).sort((a, b) => b[1].count - a[1].count);
+  const byCategory = {};
+  for (const [kw, { count, category }] of sorted) {
+    if (!byCategory[category]) byCategory[category] = [];
+    byCategory[category].push({ keyword: kw, count });
+  }
+
+  // Ajoute wordCount au report pour l'afficher
+  const wordCount = text.trim().split(/\s+/).length;
+  setReport({ sorted, byCategory, total, uniqueKeywords, riskScore, risk, documentName, wordCount });
+  setActiveTab("report");
+}, [text, documentName, keywords]);
 
   const reset = () => {
     setText(""); setDocumentName(""); setFileName(null); setReport(null); setActiveTab("input");
@@ -145,27 +325,24 @@ export default function GreenwashingDetector() {
   };
 
   const totalKw = Object.values(keywords).flat().length;
-  const NAV_ITEMS = [
-    { id: "input", label: "Analyze", icon: "📄" },
-    { id: "keywords", label: "Keywords", icon: "🔑" },
-    { id: "report", label: "Report", icon: "📊" }
-  ];
 
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 50%, #fdf4ff 100%)", fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif" }}>
+
+      {/* Hero */}
       <div style={{ background: "linear-gradient(135deg, #064e3b 0%, #065f46 40%, #0f766e 100%)", padding: "48px 24px 80px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -40, right: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
         <div style={{ position: "absolute", bottom: -60, left: 60, width: 300, height: 300, borderRadius: "50%", background: "rgba(255,255,255,0.03)" }} />
         <div style={{ maxWidth: 900, margin: "0 auto", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>🌿</div>
-            <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>Greenwashing Detector</span>
+            <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>ESG Intelligence</span>
           </div>
           <h1 style={{ color: "#fff", fontSize: 42, fontWeight: 800, margin: "0 0 12px", letterSpacing: -1, lineHeight: 1.1 }}>
-            Detect Greenwashing<br /><span style={{ color: "#6ee7b7" }}>in ESG Reports</span>
+            Greenwashing<br /><span style={{ color: "#6ee7b7" }}>Detector</span>
           </h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 16, margin: "0 0 32px", maxWidth: 500 }}>
-            Upload any ESG report and instantly detect greenwashing patterns using keyword analysis.
+            Upload any ESG report and instantly detect greenwashing patterns using our keyword analysis engine, built from real ESG report analysis.
           </p>
           <div style={{ display: "flex", gap: 24 }}>
             {[{ n: totalKw, l: "Keywords" }, { n: Object.keys(keywords).length, l: "Categories" }, { n: "100%", l: "Free" }].map(({ n, l }) => (
@@ -178,6 +355,7 @@ export default function GreenwashingDetector() {
         </div>
       </div>
 
+      {/* Nav Tabs */}
       <div style={{ maxWidth: 900, margin: "-28px auto 0", padding: "0 24px", position: "relative", zIndex: 10 }}>
         <div style={{ background: "#fff", borderRadius: 16, padding: 6, display: "inline-flex", gap: 4, boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
           {NAV_ITEMS.map(({ id, label, icon }) => (
@@ -197,13 +375,15 @@ export default function GreenwashingDetector() {
       </div>
 
       <div style={{ maxWidth: 900, margin: "24px auto", padding: "0 24px 48px" }}>
+
+        {/* INPUT TAB */}
         {activeTab === "input" && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 20 }}>
             <div>
               <div onDrop={handleDrop} onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)}
                 style={{ background: dragOver ? "#ecfdf5" : "#fff", border: `2px dashed ${dragOver ? "#059669" : "#d1fae5"}`, borderRadius: 20, padding: 48, textAlign: "center", cursor: "pointer", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                 {loading ? (
-                  <div><div style={{ fontSize: 48, marginBottom: 16 }}>⏳</div><p style={{ color: "#059669", fontWeight: 600 }}>Extracting text...</p></div>
+                  <div><div style={{ fontSize: 48, marginBottom: 16 }}>⏳</div><p style={{ color: "#059669", fontWeight: 600 }}>Extracting text from PDF...</p></div>
                 ) : fileName && text ? (
                   <div>
                     <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
@@ -228,10 +408,16 @@ export default function GreenwashingDetector() {
                 </button>
               )}
             </div>
+
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                 <h3 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111827", textTransform: "uppercase", letterSpacing: 1 }}>How it works</h3>
-                {[{ n: "1", t: "Upload PDF", d: "Drop any ESG or sustainability report" }, { n: "2", t: "Keyword scan", d: `${totalKw} greenwashing terms analyzed` }, { n: "3", t: "Risk score", d: "Get an instant 0–100 risk assessment" }, { n: "4", t: "Export", d: "Download detailed report as .txt" }].map(({ n, t, d }) => (
+                {[
+                  { n: "1", t: "Upload PDF", d: "Drop any ESG or sustainability report" },
+                  { n: "2", t: "Keyword scan", d: `${totalKw} greenwashing terms analyzed` },
+                  { n: "3", t: "Risk score", d: "Get an instant 0–100 risk assessment" },
+                  { n: "4", t: "Export", d: "Download detailed report as .txt" }
+                ].map(({ n, t, d }) => (
                   <div key={n} style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                     <div style={{ width: 28, height: 28, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#15803d", flexShrink: 0 }}>{n}</div>
                     <div><p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#111827" }}>{t}</p><p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>{d}</p></div>
@@ -240,30 +426,35 @@ export default function GreenwashingDetector() {
               </div>
               <div style={{ background: "linear-gradient(135deg, #ecfdf5, #f0fdf4)", border: "1px solid #a7f3d0", borderRadius: 16, padding: 20 }}>
                 <p style={{ margin: "0 0 8px", fontSize: 13, fontWeight: 700, color: "#065f46" }}>💡 Did you know?</p>
-                <p style={{ margin: 0, fontSize: 12, color: "#047857", lineHeight: 1.6 }}>Over 40% of green claims made online are exaggerated, false, or deceptive.</p>
+                <p style={{ margin: 0, fontSize: 12, color: "#047857", lineHeight: 1.6 }}>Over 40% of green claims made online are exaggerated, false, or deceptive. Our keyword bank was built by analyzing real ESG reports.</p>
               </div>
             </div>
           </div>
         )}
 
+        {/* KEYWORDS TAB */}
         {activeTab === "keywords" && (
           <div>
             <div style={{ background: "#fff", borderRadius: 20, padding: 24, marginBottom: 24, boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
               <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 700, color: "#111827" }}>Add Custom Keyword</h3>
               <div style={{ display: "flex", gap: 10 }}>
-                <select value={newKeywordCategory} onChange={e => setNewKeywordCategory(e.target.value)} style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 10, fontFamily: "inherit", fontSize: 14, background: "#f9fafb" }}>
+                <select value={newKeywordCategory} onChange={e => setNewKeywordCategory(e.target.value)}
+                  style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 10, fontFamily: "inherit", fontSize: 14, background: "#f9fafb" }}>
                   <option value="">Select category...</option>
                   {Object.keys(keywords).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
-                <input placeholder="New keyword..." value={newKeywordValue} onChange={e => setNewKeywordValue(e.target.value)} onKeyDown={e => e.key === "Enter" && addKeyword()} style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 10, fontFamily: "inherit", fontSize: 14 }} />
+                <input placeholder="New keyword..." value={newKeywordValue} onChange={e => setNewKeywordValue(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && addKeyword()}
+                  style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 10, fontFamily: "inherit", fontSize: 14 }} />
                 <button onClick={addKeyword} style={{ background: "linear-gradient(135deg, #064e3b, #0f766e)", color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>+ Add</button>
               </div>
             </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               {Object.entries(keywords).map(([cat, kws]) => {
                 const colors = CATEGORY_COLORS[cat] || { bg: "#f9fafb", border: "#e5e7eb", text: "#374151", dot: "#9ca3af" };
                 return (
-                  <div key={cat} style={{ background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+                  <div key={cat} style={{ background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 12px rgba(0,0,0,0.04)", border: "1px solid #f3f4f6" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <div style={{ width: 8, height: 8, borderRadius: "50%", background: colors.dot }} />
@@ -283,12 +474,17 @@ export default function GreenwashingDetector() {
                 );
               })}
             </div>
+
             <div style={{ marginTop: 16, textAlign: "right" }}>
-              <button onClick={() => setKeywords(JSON.parse(JSON.stringify(DEFAULT_GREENWASHING_KEYWORDS)))} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "8px 16px", color: "#6b7280", cursor: "pointer", fontFamily: "inherit", fontSize: 13 }}>↺ Reset to Default</button>
+              <button onClick={() => setKeywords(JSON.parse(JSON.stringify(DEFAULT_GREENWASHING_KEYWORDS)))}
+                style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "8px 16px", color: "#6b7280", cursor: "pointer", fontFamily: "inherit", fontSize: 13 }}>
+                ↺ Reset to Default
+              </button>
             </div>
           </div>
         )}
 
+        {/* REPORT TAB */}
         {activeTab === "report" && (
           <div>
             {!report ? (
@@ -318,15 +514,22 @@ export default function GreenwashingDetector() {
                       <div style={{ height: "100%", width: `${report.riskScore}%`, background: `linear-gradient(90deg, #22c55e, ${report.risk.color})`, borderRadius: 4 }} />
                     </div>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 20 }}>
-                    {[{ v: report.total, l: "Total occurrences" }, { v: report.uniqueKeywords, l: "Unique keywords" }, { v: Object.keys(report.byCategory).length, l: "Categories flagged" }].map(({ v, l }) => (
-                      <div key={l} style={{ background: "rgba(255,255,255,0.7)", borderRadius: 12, padding: "12px 16px" }}>
-                        <div style={{ fontSize: 24, fontWeight: 800, color: "#111827" }}>{v}</div>
-                        <div style={{ fontSize: 12, color: "#9ca3af" }}>{l}</div>
-                      </div>
-                    ))}
-                  </div>
+                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 12, marginTop: 20 }}>
+  {[
+    { v: report.total, l: "Keyword hits" },
+    { v: report.uniqueKeywords, l: "Unique keywords" },
+    { v: Object.keys(report.byCategory).length, l: "Categories flagged" },
+    { v: `${(report.total / (report.wordCount / 1000)).toFixed(1)}/1k`, l: "Density per 1000 words" },
+    { v: report.wordCount.toLocaleString(), l: "Document words" }
+  ].map(({ v, l }) => (
+    <div key={l} style={{ background: "rgba(255,255,255,0.7)", borderRadius: 12, padding: "12px 16px" }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>{v}</div>
+      <div style={{ fontSize: 12, color: "#9ca3af" }}>{l}</div>
+    </div>
+  ))}
+</div>
                 </div>
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
                   {Object.entries(report.byCategory).map(([cat, kws]) => {
                     const colors = CATEGORY_COLORS[cat] || { bg: "#f9fafb", border: "#e5e7eb", text: "#374151", dot: "#9ca3af" };
@@ -356,6 +559,7 @@ export default function GreenwashingDetector() {
                     );
                   })}
                 </div>
+
                 <button onClick={exportReport} style={{ background: "linear-gradient(135deg, #064e3b, #0f766e)", color: "#fff", border: "none", borderRadius: 14, padding: "14px 32px", fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 4px 16px rgba(6,78,59,0.3)" }}>
                   <span>⬇</span> Export Full Report
                 </button>
